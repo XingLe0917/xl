@@ -1,0 +1,36 @@
+http://colah.github.io/posts/2015-08-Understanding-LSTMs/  有关翻译和理解：
+RNN和传统神经网络相比，中间包含loop，允许信息持续。RNN可以被看作许多网络的多个复制，每一个通过信息到下一个。
+RNN天然的像链式的属性显示，他们和 sequences 和 lists 有密切的联系。
+当在相关信息中的gap比较小时，RNN能够使用过去的信息。不幸的是，随着 gap 的增加，RNN不能学习到信息的联系。
+LSTM——Long Short Term Memory, 一种特殊的RNN，能够处理Long-term 依赖。
+所有的RNN都有重复神经网络模块的链式结构。在标准RNN网络中，重复模块有一个简单的结构，像一个单独的 tanh 层。
+LSTM 有4层。
+LSTM的核心是 cell state，像一种传送带，水平通过图表的上面。LSTM 有能力去添加或者删除cell state，由一个叫做 gates 的结构小心地控制着。
+Gates 是一种选择让信息通过的方式。由一个 sigmoid 神经网络层和一个 pointwise multiplication 操作。sigmoid 层输出0到1中的数字，描述每个组件有多少信息应该让通过。
+一个 LSTM 有3个 gates ,保护和控制cell state.
+
+LSTM一步一步通过：
+LSTM的第一步是决定哪些信息要从cell state 中扔掉。这由一个叫 “forget gate layer”决定。
+第二步是决定什么信息要存储在cell state中。这包括两部分： 一个sigmoid 层叫做“input gate layer”决定哪些需要更新。另一个 tanh layer 创造一个候选值的向量。
+第三步就是将第二步中的两步结合创造一个更新的 state.
+最后，需要决定输出什么。这里分为几步：1 由一个sigmoid决定cell state 的什么部分要输出，2 再乘一个 tanh（push 值到在 -1 和 1 之间） ，只输出我们决定输出的。
+
+值得注意的LSTM变体：
+1. Gers & Schmidhuber (2000) 添加了“peephole connections.” 让 gates 看起来像 cell state.
+2. 使用 coupled forget and input gates，将决定忘记什么和添加什么新信息放在一起做决定。只忘记当决定在这个地方放东西的地方。放入新的值到states当忘记一些老的。
+3. Gated Recurrent Unit, or GRU, introduced by Cho, et al. (2014) 结合了forget 和 input gates 到一个单独的 “update gate”.产生的模型比标准LSTM简单
+4. Depth Gated RNNs by Yao, et al. (2015).
+5. Clockwork RNNs by Koutnik, et al. (2014).
+
+哪个变体最好？区别重要吗？
+Greff, et al. (2015)  对流行的变体做了比较，发现他们都相同。
+Jozefowicz, et al. (2015)测试了超过10千个RNN架构，发现在一些任务中其中一些比LSTMs要好。
+
+LSTMs 是我们利用RNNs 成就的一大步，那另一个就是 attention。它的想法是在RNN挑选信息的每一步中，看看更大的信息集合。
+
+在RNN研究中，除了Attention ，还有一些令人激动的线索。例如：
+* Grid LSTMs by Kalchbrenner, et al. (2015)
+* RNNs 在生成式模型中
+        比如 Gregor, et al. (2015) ——DRAW: A Recurrent Neural Network For Image Generation
+         Chung, et al. (2015)——A Recurrent Latent Variable Model for Sequential Data
+         Bayer & Osendorfer (2015)——learning stochastic recurrent network
